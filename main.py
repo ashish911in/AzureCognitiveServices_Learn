@@ -1,5 +1,5 @@
 from pytictoc import TicToc
-import azureTextAnalyse as textAnalyse
+import azureTextAnalyse
 import sys
 
 time = TicToc()
@@ -13,7 +13,7 @@ def main():
     4. Get response JSON
     """
     sampleText = [sys.argv[1]]
-    textAnalyse.analyseText(sampleText)
+    azureTextAnalyse.analyseText(sampleText)
     print("main() function ended")
 
 if __name__ == "__main__":
