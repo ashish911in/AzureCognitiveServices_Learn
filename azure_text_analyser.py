@@ -1,6 +1,6 @@
 from azure.ai.textanalytics import TextAnalyticsClient
 import azure_connect as connector
-import config
+import environment_variables as ev
 
 def create_text_analytics_client(key,endpoint):
     print("create_text_analytics_client() fn started")
@@ -23,8 +23,8 @@ def language_detection(inputText, credentials):
 
 def analyse_text(inputText):
     credentials = dict()
-    credentials["Key"] = config.API['Key']
-    credentials["End_Point"] = config.API['End_Point']
+    credentials["Key"] = ev.get_env_variable('API_Key')
+    credentials["End_Point"] = ev.get_env_variable('End_Point')
     language_detection(inputText, credentials)
 
 
@@ -32,11 +32,13 @@ if __name__ == "__main__":
    from pytictoc import TicToc
    time_tracker = TicToc()
    time_tracker.tic()
+   # import environment_variables as ev
+   import sys
    credentials = dict()
-   credentials["Key"] = config.API['Key']
-   credentials["End_Point"] = config.API['End_Point']
+   credentials["Key"] = ev.get_env_variable('API_Key')
+   credentials["End_Point"] = ev.get_env_variable('End_Point')
    # textClient = createTextAnalyticsClient(key,endpoint)
    # print(textClient,type(textClient))
-   inputText = ["Hello how are you?"]
+   inputText = [sys.argv[1]]
    language_detection(inputText, credentials)
    time_tracker.toc()
