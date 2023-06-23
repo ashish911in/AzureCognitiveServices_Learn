@@ -9,10 +9,10 @@ def authenticate_client(key):
 
 if __name__ == "__main__":
    from pytictoc import TicToc
-   time = TicToc()
-   time.tic()
+   time_tracker = TicToc()
+   time_tracker.tic()
    import config
    key = config.API['Key']
    to_print = authenticate_client(key)
    print(to_print,type(to_print))
-   time.toc()
+   time_tracker.toc()
