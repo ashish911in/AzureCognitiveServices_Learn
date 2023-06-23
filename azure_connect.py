@@ -2,7 +2,7 @@ from azure.core.credentials import AzureKeyCredential
 
 # Authenticate the client using your key and return a credential 
 def authenticate_client(key):
-    print("authenticate_client() fn started")
+    print(f"authenticate_client({type(key)}) fn started")
     ta_credential = AzureKeyCredential(key)
     print("authenticate_client() fn ended")
     return ta_credential
