@@ -13,7 +13,7 @@ def test():
         print(os.getenv('API_Key'))
 
 def get_env_variable(variable):
-    print(f"Entered get_env_variable({type(variable)}) function")
+    print(f"Entered get_env_variable({variable}) function")
     return os.getenv(variable)
 
 if __name__ == '__main__':
