@@ -8,7 +8,7 @@ def test():
     if check:
         print('c:',check)
     else:
-        os.environ['API_Key'] = "a13fda58da4245a7955b43ad8fbdd803"
+        os.environ['API_Key'] = "po"
         print("Key set")
         print(os.getenv('API_Key'))
 

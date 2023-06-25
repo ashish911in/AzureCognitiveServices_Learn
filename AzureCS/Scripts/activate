@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\AshishKumar\Documents\AzureCognitiveServices_Learn\AzureCS"
+VIRTUAL_ENV="C:\Users\User 1\Documents\AzureCognitiveServices_Learn\AzureCS"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
