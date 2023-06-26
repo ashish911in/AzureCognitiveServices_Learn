@@ -2,7 +2,7 @@ from pytictoc import TicToc
 time_tracker = TicToc()
 time_tracker.tic()
 import azure_text_analyser
-import sys
+
 
 print("main.py has started")
 """
