@@ -1,6 +1,7 @@
 import json
 import pprint
 import sys
+import logging
 # all file input 1st
 
 def file_read(file_name):
@@ -24,7 +25,7 @@ def json_to_dict(data):
 # End of converters
 
 def json_write(data):
-    print(f'json_write({type(data)}) fn has started')
+    logging.info(f'json_write({type(data)}) fn has started')
     try:
         with open('.\\input_output\\output.json', 'w') as outfile:
             json.dump(data, outfile)
@@ -34,8 +35,7 @@ def json_write(data):
         print(value)
         print(traceback)
 
-    print('json_write() fn has started')
-    file_write_print
+    logging.info('json_write() fn has started')
 
 def file_write_print(data,append=False):
     '''
@@ -48,10 +48,10 @@ def file_write_print(data,append=False):
             Returns:
                     Does not return anything
     '''
-    print('file_write_print() start')
+    logging.info('file_write_print() start')
     with open('.\\input_output\\output_file.txt', 'a' if append else 'w') as outfile:
         print(data, file=outfile)
-    print('file_write_print() end')
+    logging.info('file_write_print() end')
 
 def pprint_dict(data):
     pprint.PrettyPrinter(width=7).pprint(data)

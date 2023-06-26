@@ -1,0 +1,16 @@
+For inputText = [
+       """
+       This is a paragraph.
+       I have never seen something so difficult. 2nd sentence. James not happy.
+       Microsoft is not there in London, UK.
+       """,
+       """
+       2nd sentence. James not happy.
+       """
+       ]
+
+
+{'id': '0', 'sentiment': 'negative', 'warnings': [], 'statistics': None, 'confidence_scores': SentimentConfidenceScores(positive=0.0, neutral=0.0, negative=1.0), 'sentences': [SentenceSentiment(text=        This is a paragraph.        , sentiment=neutral, confidence_scores=SentimentConfidenceScores(positive=0.0, neutral=1.0, negative=0.0), length=36, offset=0, mined_opinions=[]), SentenceSentiment(text=I have never seen something so difficult. , sentiment=neutral, confidence_scores=SentimentConfidenceScores(positive=0.24, neutral=0.5, negative=0.27), length=42, offset=36, mined_opinions=[]), SentenceSentiment(text=2nd sentence. , sentiment=neutral, confidence_scores=SentimentConfidenceScores(positive=0.0, neutral=0.99, negative=0.01), length=14, offset=78, mined_opinions=[]), SentenceSentiment(text=James not happy.        , sentiment=negative, confidence_scores=SentimentConfidenceScores(positive=0.0, neutral=0.0, negative=1.0), length=24, offset=92, mined_opinions=[MinedOpinion(target=TargetSentiment(text=James, sentiment=negative, confidence_scores=SentimentConfidenceScores(positive=0.0, neutral=0.0, negative=1.0), length=5, offset=92), assessments=[AssessmentSentiment(text=happy, sentiment=negative, confidence_scores=SentimentConfidenceScores(positive=0.0, neutral=0.0, negative=1.0), length=5, offset=102, is_negated=True)])]), SentenceSentiment(text=Microsoft is not there in London, UK.        , sentiment=neutral, confidence_scores=SentimentConfidenceScores(positive=0.0, neutral=0.99, negative=0.0), length=45, offset=116, mined_opinions=[])], 'is_error': False, 'kind': 'SentimentAnalysis'}
+
+
+{'id': '1', 'sentiment': 'negative', 'warnings': [], 'statistics': None, 'confidence_scores': SentimentConfidenceScores(positive=0.0, neutral=0.0, negative=1.0), 'sentences': [SentenceSentiment(text=        2nd sentence. , sentiment=neutral, confidence_scores=SentimentConfidenceScores(positive=0.0, neutral=0.98, negative=0.01), length=22, offset=0, mined_opinions=[]), SentenceSentiment(text=James not happy.        , sentiment=negative, confidence_scores=SentimentConfidenceScores(positive=0.0, neutral=0.0, negative=1.0), length=24, offset=22, mined_opinions=[MinedOpinion(target=TargetSentiment(text=James, sentiment=negative, confidence_scores=SentimentConfidenceScores(positive=0.0, neutral=0.0, negative=1.0), length=5, offset=22), assessments=[AssessmentSentiment(text=happy, sentiment=negative, confidence_scores=SentimentConfidenceScores(positive=0.0, neutral=0.0, negative=1.0), length=5, offset=32, is_negated=True)])])], 'is_error': False, 'kind': 'SentimentAnalysis'}

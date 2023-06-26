@@ -3,6 +3,7 @@ import azure_connect as connector
 import environment_variables as ev
 from input_output import file_io
 import logging
+import sys
 logging.basicConfig(filename='app.log', filemode='w',format='%(asctime)s - %(message)s', level=logging.INFO)
 
 def create_text_analytics_client(key,endpoint):
@@ -16,12 +17,12 @@ def create_text_analytics_client(key,endpoint):
             Returns:
                     text_analytics_client (TextAnalyticsClient): an object to perform text analytics API calls
     '''
-    print(f"create_text_analytics_client({type(key)},{type(endpoint)}) fn started")
+    logging.info(f"create_text_analytics_client({type(key)},{type(endpoint)}) fn started")
     ta_credential = connector.authenticate_client(key)
     text_analytics_client = TextAnalyticsClient(
             endpoint=endpoint, 
             credential=ta_credential)
-    print("create_text_analytics_client() fn ended")
+    logging.info("create_text_analytics_client() fn ended")
     return text_analytics_client
 
 def language_detection(inputText, text_client):
@@ -35,7 +36,7 @@ def language_detection(inputText, text_client):
             Returns:
                     Does not return anything
     '''
-    print(f"language_detection({type(inputText)},{type(text_client)}) fn has started")
+    logging.info(f"language_detection({type(inputText)},{type(text_client)}) fn has started")
     try:
         response = text_client.detect_language(documents = inputText, country_hint = 'us')
         docs = [doc for doc in response if doc.is_error==False]
@@ -46,7 +47,7 @@ def language_detection(inputText, text_client):
 
     except Exception as err:
         print("Encountered exception. {}".format(err))
-    print(f"language_detection() fn has ended")
+    logging.info(f"language_detection() fn has ended")
 
 def analyze_sentiment(inputText, text_client):
     '''
@@ -59,19 +60,42 @@ def analyze_sentiment(inputText, text_client):
             Returns:
                     Does not return anything
     '''
-    print(f"analyze_sentiment({type(inputText)},{type(text_client)}) fn has started")
+    logging.info(f"analyze_sentiment({type(inputText)},{type(text_client)}) fn has started")
+    response_dict = {
+            'input': inputText,
+            'data': []
+        }
     try:
-        response = text_client.analyze_sentiment(inputText,show_opinion_mining=True)[0]
-        print(response)
+        response = text_client.analyze_sentiment(inputText,show_opinion_mining=True)
         file_io.file_write_print(response)
-    
+        results = [result for result in response if not result['is_error']]
+        for text in results:
+            temp_dict1 = dict()
+            temp_dict1['id'] = text['id']
+            temp_dict1['sentiment'] = text['sentiment']
+            temp_dict1['data'] = []
+            for sentence in text['sentences']:
+                temp_dict2 = dict()
+                temp_dict2['text'] = sentence['text']
+                temp_dict2['sentiment'] = sentence['sentiment']
+                temp_dict2['length'] = sentence['length']
+                temp_dict2['offset'] = sentence['offset']
+                temp_dict1['data'].append(temp_dict2)
+            response_dict['data'].append(temp_dict1)
+
+
     except Exception as err:
         print("Encountered exception. {}".format(err))
+    
+    print('\n')
+    print(response_dict)
+    # file_io.file_write_print(response_dict)
+    file_io.json_write(response_dict)
 
-    print(f"analyze_sentiment() fn has ended")
+    logging.info(f"analyze_sentiment() fn has ended")
 
 def recognize_entities(inputText,text_client):
-    print("recognize_entities() fn started")
+    logging.info("recognize_entities() fn started")
     response_dict = {
         'input': inputText,
         'data': []
@@ -109,7 +133,7 @@ def recognize_entities(inputText,text_client):
     print(response_dict)
     file_io.file_write_print(response_dict)
     file_io.json_write(response_dict)
-    print("recognize_entities() fn ended")
+    logging.info("recognize_entities() fn ended")
 
 def analyse_text(inputText):
     logging.info(f"analyse_text({type(inputText)}) fn has started")
@@ -136,7 +160,7 @@ def analyse_text(inputText):
     # language_detection(inputText, text_client)
     # analyze_sentiment(inputText,text_client)
     # recognize_entities(inputText,text_client)
-    print(f"analyse_text() fn has ended")
+    logging.info(f"analyse_text() fn has ended")
     
 if __name__ == "__main__":
    from pytictoc import TicToc
@@ -145,7 +169,8 @@ if __name__ == "__main__":
    inputText = [
        """
        This is a paragraph.
-       I have never seen something so difficult.
+       I have never seen something so difficult. 2nd sentence. James not happy.
+       Microsoft is not there in London, UK.
        """,
        """
        2nd sentence. James not happy.

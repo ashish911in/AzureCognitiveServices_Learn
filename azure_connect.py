@@ -1,10 +1,11 @@
 from azure.core.credentials import AzureKeyCredential
+import logging
 
 # Authenticate the client using your key and return a credential 
 def authenticate_client(key):
-    print(f"authenticate_client({type(key)}) fn started")
+    logging.info(f"authenticate_client({type(key)}) fn started")
     ta_credential = AzureKeyCredential(key)
-    print("authenticate_client() fn ended")
+    logging.info("authenticate_client() fn ended")
     return ta_credential
 
 if __name__ == "__main__":

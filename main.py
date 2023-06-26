@@ -3,7 +3,6 @@ time_tracker = TicToc()
 time_tracker.tic()
 import azure_text_analyser
 
-
 print("main.py has started")
 """
 1. Connect to Azure Endpoint
