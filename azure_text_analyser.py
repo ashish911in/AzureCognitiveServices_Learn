@@ -208,23 +208,24 @@ def analyse_text(input_text):
     credentials["End_Point"] = ev.get_env_variable('End_Point')
     text_client = create_text_analytics_client(credentials['Key'],credentials['End_Point'])
     choice = 0
-    
+
     functions_dict = {
         '1' : language_detection,
         '2' : analyze_sentiment,
         '3' : recognize_entities#,
         # '4': dynamic_classify_doc_label
     }
-    while(choice!='4'):
+    exit_choice = '5'
+    while(choice!=exit_choice):
         print('1. Language Detection')
         print('2. Sentiment Analysis')
         print('3. Entities Detection')
-        print('4. Single Label Classify')
+        print('4. Single Label Classify (inactive)')
         print('5. Exit')
         choice = input('Enter a choice:')
-        if choice in ['1','2','3','4']:
+        if choice in functions_dict.keys():
             print(functions_dict[choice](input_text,text_client))
-        elif choice=='5':
+        elif choice==exit_choice:
             break
         else:
             print('Invalid option. Try again !! \n')
