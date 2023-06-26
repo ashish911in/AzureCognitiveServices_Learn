@@ -212,8 +212,8 @@ def analyse_text(input_text):
     functions_dict = {
         '1' : language_detection,
         '2' : analyze_sentiment,
-        '3' : recognize_entities,
-        '4': dynamic_classify_doc_label
+        '3' : recognize_entities#,
+        # '4': dynamic_classify_doc_label
     }
     while(choice!='4'):
         print('1. Language Detection')
