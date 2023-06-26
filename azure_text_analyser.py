@@ -37,16 +37,28 @@ def language_detection(inputText, text_client):
                     Does not return anything
     '''
     logging.info(f"language_detection({type(inputText)},{type(text_client)}) fn has started")
+    response_dict = {
+            'input': inputText,
+            'data': []
+        }
     try:
         response = text_client.detect_language(documents = inputText, country_hint = 'us')
-        docs = [doc for doc in response if doc.is_error==False]
-        print("Response:",  response[0])
+        results = [result for result in response if result.is_error==False]
         file_io.file_write_print(response)
-        for doc in docs:
-            print("Language: ", doc.primary_language.name)
+        for text in results:
+            temp_dict1 = dict()
+            temp_dict1['id'] = text['id']
+            temp_dict1['primary_language'] = {
+                'name': text.primary_language.name,
+                'confidence_score': text.primary_language.confidence_score
+            }
+            response_dict['data'].append(temp_dict1)
 
     except Exception as err:
         print("Encountered exception. {}".format(err))
+    
+    file_io.file_write_print(response_dict)
+    file_io.json_write(response_dict)
     logging.info(f"language_detection() fn has ended")
 
 def analyze_sentiment(inputText, text_client):
@@ -87,14 +99,22 @@ def analyze_sentiment(inputText, text_client):
     except Exception as err:
         print("Encountered exception. {}".format(err))
     
-    print('\n')
-    print(response_dict)
-    # file_io.file_write_print(response_dict)
+    file_io.file_write_print(response_dict)
     file_io.json_write(response_dict)
 
     logging.info(f"analyze_sentiment() fn has ended")
 
 def recognize_entities(inputText,text_client):
+    '''
+    Recognize the entities present in the text using Azure Cognitive Services
+
+            Parameters:
+                    inputText (list): The text to be analysed
+                    text_client (TextAnalyticsClient): The object to perform text analytics API calls
+
+            Returns:
+                    Does not return anything
+    '''
     logging.info("recognize_entities() fn started")
     response_dict = {
         'input': inputText,
@@ -129,13 +149,21 @@ def recognize_entities(inputText,text_client):
         print(type_check)
         print(value)
         print(traceback)
-    print('\n')
-    print(response_dict)
+
     file_io.file_write_print(response_dict)
     file_io.json_write(response_dict)
     logging.info("recognize_entities() fn ended")
 
 def analyse_text(inputText):
+    '''
+    Main analyse function from which other functions are called
+
+            Parameters:
+                    inputText (list): The text to be analysed
+
+            Returns:
+                    Does not return anything
+    '''
     logging.info(f"analyse_text({type(inputText)}) fn has started")
     credentials = dict()
     credentials["Key"] = ev.get_env_variable('API_Key')
