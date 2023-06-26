@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 import os
+import logging
 
 def test():
     check = os.getenv('API_Key')
@@ -13,7 +14,7 @@ def test():
         print(os.getenv('API_Key'))
 
 def get_env_variable(variable):
-    print(f"Entered get_env_variable({variable}) function")
+    logging.info(f"Entered get_env_variable({variable}) function")
     return os.getenv(variable)
 
 if __name__ == '__main__':

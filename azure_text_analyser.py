@@ -4,6 +4,7 @@ import environment_variables as ev
 from input_output import file_io
 import logging
 import sys
+from helpers import converters
 logging.basicConfig(filename='app.log', filemode='w',format='%(asctime)s - %(message)s', level=logging.INFO)
 
 def create_text_analytics_client(key,endpoint):
@@ -37,6 +38,7 @@ def language_detection(inputText, text_client):
                     Does not return anything
     '''
     logging.info(f"language_detection({type(inputText)},{type(text_client)}) fn has started")
+    response = ''
     response_dict = {
             'input': inputText,
             'data': []
@@ -44,7 +46,6 @@ def language_detection(inputText, text_client):
     try:
         response = text_client.detect_language(documents = inputText, country_hint = 'us')
         results = [result for result in response if result.is_error==False]
-        file_io.file_write_print(response)
         for text in results:
             temp_dict1 = dict()
             temp_dict1['id'] = text['id']
@@ -57,9 +58,10 @@ def language_detection(inputText, text_client):
     except Exception as err:
         print("Encountered exception. {}".format(err))
     
-    file_io.file_write_print(response_dict)
+    file_io.file_write_print(response)
     file_io.json_write(response_dict)
     logging.info(f"language_detection() fn has ended")
+    return converters.dict_to_json(response_dict)
 
 def analyze_sentiment(inputText, text_client):
     '''
@@ -73,13 +75,13 @@ def analyze_sentiment(inputText, text_client):
                     Does not return anything
     '''
     logging.info(f"analyze_sentiment({type(inputText)},{type(text_client)}) fn has started")
+    response = ''
     response_dict = {
             'input': inputText,
             'data': []
         }
     try:
-        response = text_client.analyze_sentiment(inputText,show_opinion_mining=True)
-        file_io.file_write_print(response)
+        response = text_client.analyze_sentiment(inputText,show_opinion_mining=False)
         results = [result for result in response if not result['is_error']]
         for text in results:
             temp_dict1 = dict()
@@ -92,17 +94,26 @@ def analyze_sentiment(inputText, text_client):
                 temp_dict2['sentiment'] = sentence['sentiment']
                 temp_dict2['length'] = sentence['length']
                 temp_dict2['offset'] = sentence['offset']
+                temp_dict2['confidence_score'] = {
+                    'positive':sentence['confidence_scores'].positive,
+                    'neutral':sentence.confidence_scores.neutral,
+                    'negative':sentence['confidence_scores'].negative
+                }
                 temp_dict1['data'].append(temp_dict2)
             response_dict['data'].append(temp_dict1)
 
 
     except Exception as err:
         print("Encountered exception. {}".format(err))
+        type_check, value, traceback = sys.exc_info()
+        print(type_check)
+        print(value)
+        print(traceback)
     
-    file_io.file_write_print(response_dict)
+    file_io.file_write_print(response)
     file_io.json_write(response_dict)
-
     logging.info(f"analyze_sentiment() fn has ended")
+    return converters.dict_to_json(response_dict)
 
 def recognize_entities(inputText,text_client):
     '''
@@ -116,6 +127,7 @@ def recognize_entities(inputText,text_client):
                     Does not return anything
     '''
     logging.info("recognize_entities() fn started")
+    response = ''
     response_dict = {
         'input': inputText,
         'data': []
@@ -125,14 +137,11 @@ def recognize_entities(inputText,text_client):
     try:
         response = text_client.recognize_entities(inputText)
         # print(response)
-        file_io.file_write_print(response)
         for entity_list in response:
-            print(entity_list)
             temp_dict1 = dict()
             temp_dict1['id'] = entity_list['id']
             temp_dict1['data'] = []
             for entity in entity_list.entities:
-                print(entity)
                 temp_dict2 = dict()
                 temp_dict2['text'] = entity.text
                 temp_dict2['category'] = entity.category
@@ -150,9 +159,11 @@ def recognize_entities(inputText,text_client):
         print(value)
         print(traceback)
 
-    file_io.file_write_print(response_dict)
+    file_io.file_write_print(response)
     file_io.json_write(response_dict)
     logging.info("recognize_entities() fn ended")
+    return converters.dict_to_json(response_dict)
+    
 
 def analyse_text(inputText):
     '''
@@ -183,11 +194,12 @@ def analyse_text(inputText):
         print('3. Entities Detection')
         print('4. Exit')
         choice = input('Enter a choice:')
-        if choice!='4':
-            functions_dict[choice](inputText,text_client)
-    # language_detection(inputText, text_client)
-    # analyze_sentiment(inputText,text_client)
-    # recognize_entities(inputText,text_client)
+        if choice in ['1','2','3']:
+            print(functions_dict[choice](inputText,text_client))
+        elif choice=='4':
+            break
+        else:
+            print('Invalid option. Try again !! \n')
     logging.info(f"analyse_text() fn has ended")
     
 if __name__ == "__main__":

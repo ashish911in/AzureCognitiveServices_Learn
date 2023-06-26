@@ -16,7 +16,10 @@ sample_text_en = [
     The paragraph that we needed but not the one we deserved.
     This is probably very hard, but it is not impossible.
     Therefore, the essay is complete.
-    Do you have any further questions.
+    Do you have any further questions?
+    """,
+    """
+    Poland is nice
     """
 ]
 # sample_text_fr = 

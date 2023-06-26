@@ -1,0 +1,1 @@
+.\AzureCS\Scripts\activate.ps1
