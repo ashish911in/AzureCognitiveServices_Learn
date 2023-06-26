@@ -26,25 +26,25 @@ def create_text_analytics_client(key,endpoint):
     logging.info("create_text_analytics_client() fn ended")
     return text_analytics_client
 
-def language_detection(inputText, text_client):
+def language_detection(input_text, text_client):
     '''
     Detect the main language using Azure Cognitive Services
 
             Parameters:
-                    inputText (list): The text to be analysed
+                    input_text (list): The text to be analysed
                     text_client (TextAnalyticsClient): The object to perform text analytics API calls
 
             Returns:
                     Does not return anything
     '''
-    logging.info(f"language_detection({type(inputText)},{type(text_client)}) fn has started")
+    logging.info(f"language_detection({type(input_text)},{type(text_client)}) fn has started")
     response = ''
     response_dict = {
-            'input': inputText,
+            'input': input_text,
             'data': []
         }
     try:
-        response = text_client.detect_language(documents = inputText, country_hint = 'us')
+        response = text_client.detect_language(documents = input_text, country_hint = 'us')
         results = [result for result in response if result.is_error==False]
         for text in results:
             temp_dict1 = dict()
@@ -63,25 +63,25 @@ def language_detection(inputText, text_client):
     logging.info(f"language_detection() fn has ended")
     return converters.dict_to_json(response_dict)
 
-def analyze_sentiment(inputText, text_client):
+def analyze_sentiment(input_text, text_client):
     '''
     Analyse the sentiment of the text using Azure Cognitive Services
 
             Parameters:
-                    inputText (list): The text to be analysed
+                    input_text (list): The text to be analysed
                     text_client (TextAnalyticsClient): The object to perform text analytics API calls
 
             Returns:
                     Does not return anything
     '''
-    logging.info(f"analyze_sentiment({type(inputText)},{type(text_client)}) fn has started")
+    logging.info(f"analyze_sentiment({type(input_text)},{type(text_client)}) fn has started")
     response = ''
     response_dict = {
-            'input': inputText,
+            'input': input_text,
             'data': []
         }
     try:
-        response = text_client.analyze_sentiment(inputText,show_opinion_mining=False)
+        response = text_client.analyze_sentiment(input_text,show_opinion_mining=False)
         results = [result for result in response if not result['is_error']]
         for text in results:
             temp_dict1 = dict()
@@ -115,12 +115,12 @@ def analyze_sentiment(inputText, text_client):
     logging.info(f"analyze_sentiment() fn has ended")
     return converters.dict_to_json(response_dict)
 
-def recognize_entities(inputText,text_client):
+def recognize_entities(input_text,text_client):
     '''
     Recognize the entities present in the text using Azure Cognitive Services
 
             Parameters:
-                    inputText (list): The text to be analysed
+                    input_text (list): The text to be analysed
                     text_client (TextAnalyticsClient): The object to perform text analytics API calls
 
             Returns:
@@ -129,13 +129,13 @@ def recognize_entities(inputText,text_client):
     logging.info("recognize_entities() fn started")
     response = ''
     response_dict = {
-        'input': inputText,
+        'input': input_text,
         'data': []
     }
     temp_dict1, temp_dict2 = {},{}
     # temp_list = []
     try:
-        response = text_client.recognize_entities(inputText)
+        response = text_client.recognize_entities(input_text)
         # print(response)
         for entity_list in response:
             temp_dict1 = dict()
@@ -164,18 +164,45 @@ def recognize_entities(inputText,text_client):
     logging.info("recognize_entities() fn ended")
     return converters.dict_to_json(response_dict)
     
-
-def analyse_text(inputText):
+"""
+def dynamic_classify_doc_label(input_document, text_client):
     '''
-    Main analyse function from which other functions are called
+    Function to classify a document
 
             Parameters:
-                    inputText (list): The text to be analysed
+                    input_document (list): The text to be analysed
+                    text_client (TextAnalyticsClient): The object to perform text analytics API calls
 
             Returns:
                     Does not return anything
     '''
-    logging.info(f"analyse_text({type(inputText)}) fn has started")
+    logging.info(f"dynamic_classify_doc_label() fn has started")
+    response = ''
+    try:
+        response = text_client.dynamic_classification(input_document)
+
+    except Exception as err:
+        print("Encountered exception. {}".format(err))
+        type_check, value, traceback = sys.exc_info()
+        print(type_check)
+        print(value)
+        print(traceback)
+
+    file_io.file_write_print(response)
+    logging.info(f"dynamic_classify_doc_label() fn has ended")
+"""
+
+def analyse_text(input_text):
+    '''
+    Main analyse function from which other functions are called
+
+            Parameters:
+                    input_text (list): The text to be analysed
+
+            Returns:
+                    Does not return anything
+    '''
+    logging.info(f"analyse_text({type(input_text)}) fn has started")
     credentials = dict()
     credentials["Key"] = ev.get_env_variable('API_Key')
     credentials["End_Point"] = ev.get_env_variable('End_Point')
@@ -186,17 +213,18 @@ def analyse_text(inputText):
         '1' : language_detection,
         '2' : analyze_sentiment,
         '3' : recognize_entities,
-        '4': None
+        '4': dynamic_classify_doc_label
     }
     while(choice!='4'):
         print('1. Language Detection')
         print('2. Sentiment Analysis')
         print('3. Entities Detection')
-        print('4. Exit')
+        print('4. Single Label Classify')
+        print('5. Exit')
         choice = input('Enter a choice:')
-        if choice in ['1','2','3']:
-            print(functions_dict[choice](inputText,text_client))
-        elif choice=='4':
+        if choice in ['1','2','3','4']:
+            print(functions_dict[choice](input_text,text_client))
+        elif choice=='5':
             break
         else:
             print('Invalid option. Try again !! \n')
@@ -206,7 +234,7 @@ if __name__ == "__main__":
    from pytictoc import TicToc
    time_tracker = TicToc()
    time_tracker.tic()
-   inputText = [
+   input_text = [
        """
        This is a paragraph.
        I have never seen something so difficult. 2nd sentence. James not happy.
@@ -216,5 +244,5 @@ if __name__ == "__main__":
        2nd sentence. James not happy.
        """
        ]
-   analyse_text(inputText)
+   analyse_text(input_text)
    time_tracker.toc()

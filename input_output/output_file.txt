@@ -1,1 +1,1 @@
-[DetectLanguageResult(id=0, primary_language=DetectedLanguage(name=English, iso6391_name=en, confidence_score=0.87), warnings=[], statistics=None, is_error=False, kind=LanguageDetection), DetectLanguageResult(id=1, primary_language=DetectedLanguage(name=English, iso6391_name=en, confidence_score=0.95), warnings=[], statistics=None, is_error=False, kind=LanguageDetection)]
+
