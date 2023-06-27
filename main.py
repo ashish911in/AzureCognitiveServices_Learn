@@ -22,9 +22,19 @@ sample_text_en = [
     Poland is nice
     """
 ]
+sample_text_to_classify = [
+       """
+       Implantable electrodes are predominantly made from rigid metals that are electrically conductive by nature. But over time, metals can aggravate tissues, 
+       causing scarring and inflammation that in turn can degrade an implant's performance.
+       
+       Now, MIT engineers have developed a metal-free, Jell-O-like material that is as soft and tough as biological tissue and can conduct electricity similarly to 
+       conventional metals. The material can be made into a printable ink, which the researchers patterned into flexible, rubbery electrodes. The new material, which is a 
+       type of high-performance conducting polymer hydrogel, may one day replace metals as functional, gel-based electrodes, with the look and feel of biological tissue.
+       """
+   ]
 # sample_text_fr = 
 # sample_text_de = 
-azure_text_analyser.analyse_text(sample_text_en)
+azure_text_analyser.analyse_text(sample_text_to_classify)
 print("main.py has ended")
 
 time_tracker.toc()

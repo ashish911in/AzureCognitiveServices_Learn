@@ -132,8 +132,6 @@ def recognize_entities(input_text,text_client):
         'input': input_text,
         'data': []
     }
-    temp_dict1, temp_dict2 = {},{}
-    # temp_list = []
     try:
         response = text_client.recognize_entities(input_text)
         # print(response)
@@ -164,22 +162,43 @@ def recognize_entities(input_text,text_client):
     logging.info("recognize_entities() fn ended")
     return converters.dict_to_json(response_dict)
     
-"""
-def dynamic_classify_doc_label(input_document, text_client):
+def single_classify_text(input_document, text_client):
     '''
     Function to classify a document
 
             Parameters:
-                    input_document (list): The text to be analysed
+                    input_document (list | file): The text to be analysed
                     text_client (TextAnalyticsClient): The object to perform text analytics API calls
 
             Returns:
                     Does not return anything
     '''
-    logging.info(f"dynamic_classify_doc_label() fn has started")
-    response = ''
+    logging.info(f"single_classify_text() fn has started")
+    credentials = dict()
+    credentials["Key"] = ev.get_env_variable('API_Key_Classification')
+    credentials["End_Point"] = ev.get_env_variable('End_Point_Classification')
+    text_client = create_text_analytics_client(credentials['Key'],credentials['End_Point'])
+
+    poller,document_results = '',''
     try:
-        response = text_client.dynamic_classification(input_document)
+        poller = text_client.begin_single_label_classify(
+            input_document,
+            project_name='Single-label-classification-learning',
+            deployment_name='Deployment-Single-Label-Classify-Learn'
+        )
+        document_results = poller.result()
+
+        for doc, classification_result in zip(input_document, document_results):
+            file_io.file_write_print(classification_result)
+            if classification_result.kind == "CustomDocumentClassification":
+                classification = classification_result.classifications[0]
+                print("The document text '{}' was classified as '{}' with confidence score {}.".format(
+                    doc, classification.category, classification.confidence_score)
+                )
+            elif classification_result.is_error is True:
+                print("Document text '{}' has an error with code '{}' and message '{}'".format(
+                    doc, classification_result.error.code, classification_result.error.message
+                ))
 
     except Exception as err:
         print("Encountered exception. {}".format(err))
@@ -188,9 +207,8 @@ def dynamic_classify_doc_label(input_document, text_client):
         print(value)
         print(traceback)
 
-    file_io.file_write_print(response)
-    logging.info(f"dynamic_classify_doc_label() fn has ended")
-"""
+    logging.info(f"single_classify_text() fn has ended")
+
 
 def analyse_text(input_text):
     '''
@@ -212,15 +230,15 @@ def analyse_text(input_text):
     functions_dict = {
         '1' : language_detection,
         '2' : analyze_sentiment,
-        '3' : recognize_entities#,
-        # '4': dynamic_classify_doc_label
+        '3' : recognize_entities,
+        '4' : single_classify_text
     }
     exit_choice = '5'
     while(choice!=exit_choice):
         print('1. Language Detection')
         print('2. Sentiment Analysis')
         print('3. Entities Detection')
-        print('4. Single Label Classify (inactive)')
+        print('4. Single Label Classify')
         print('5. Exit')
         choice = input('Enter a choice:')
         if choice in functions_dict.keys():
@@ -245,5 +263,15 @@ if __name__ == "__main__":
        2nd sentence. James not happy.
        """
        ]
-   analyse_text(input_text)
+   sample_text_to_classify = [
+       """
+       Implantable electrodes are predominantly made from rigid metals that are electrically conductive by nature. But over time, metals can aggravate tissues, 
+       causing scarring and inflammation that in turn can degrade an implant's performance.
+       
+       Now, MIT engineers have developed a metal-free, Jell-O-like material that is as soft and tough as biological tissue and can conduct electricity similarly to 
+       conventional metals. The material can be made into a printable ink, which the researchers patterned into flexible, rubbery electrodes. The new material, which is a 
+       type of high-performance conducting polymer hydrogel, may one day replace metals as functional, gel-based electrodes, with the look and feel of biological tissue.
+       """
+   ]
+   analyse_text(sample_text_to_classify)
    time_tracker.toc()
