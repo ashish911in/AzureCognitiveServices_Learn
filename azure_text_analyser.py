@@ -207,8 +207,6 @@ def single_classify_text(input_document, text_client):
         print(value)
         print(traceback)
 
-    file_io.file_write_print(poller,append=True)
-    file_io.file_write_print(document_results,append=True)
     logging.info(f"single_classify_text() fn has ended")
 
 
@@ -240,7 +238,7 @@ def analyse_text(input_text):
         print('1. Language Detection')
         print('2. Sentiment Analysis')
         print('3. Entities Detection')
-        print('4. Single Label Classify (in progress)')
+        print('4. Single Label Classify')
         print('5. Exit')
         choice = input('Enter a choice:')
         if choice in functions_dict.keys():
