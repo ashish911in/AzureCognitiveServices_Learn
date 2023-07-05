@@ -1,3 +1,1 @@
-{'id': '0', 'classifications': [ClassificationCategory(category=Mechanical_engineering, confidence_score=0.17)], 'warnings': [], 'statistics': None, 'is_error': False, 'kind': 'CustomDocumentClassification'}
-<azure.ai.textanalytics._lro.AnalyzeActionsLROPoller object at 0x000002854DB2A610>
-<iterator object azure.core.paging.ItemPaged at 0x2854db28f50>
+[DetectLanguageResult(id=0, primary_language=DetectedLanguage(name=English, iso6391_name=en, confidence_score=1.0), warnings=[], statistics=None, is_error=False, kind=LanguageDetection)]
