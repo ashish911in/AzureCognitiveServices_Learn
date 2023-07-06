@@ -4,18 +4,18 @@ import os
 import logging
 
 def test():
-    check = os.getenv('API_Key')
+    check = get_env_variable('API_Key')
     print(check)
     if check:
         print('c:',check)
     else:
         os.environ['API_Key'] = "po"
         print("Key set")
-        print(os.getenv('API_Key'))
+        print(get_env_variable('API_Key'))
 
 def get_env_variable(variable):
     logging.info(f"Entered get_env_variable({variable}) function")
-    return os.getenv(variable)
+    return os.environ[variable]
 
 if __name__ == '__main__':
     from pytictoc import TicToc
