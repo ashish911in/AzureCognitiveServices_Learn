@@ -1,1 +1,1 @@
-[DetectLanguageResult(id=0, primary_language=DetectedLanguage(name=English, iso6391_name=en, confidence_score=1.0), warnings=[], statistics=None, is_error=False, kind=LanguageDetection)]
+{'id': '0', 'classifications': [ClassificationCategory(category=Mechanical_engineering, confidence_score=0.17)], 'warnings': [], 'statistics': None, 'is_error': False, 'kind': 'CustomDocumentClassification'}
